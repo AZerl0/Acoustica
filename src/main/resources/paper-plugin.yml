@@ -1,0 +1,9 @@
+name: Acoustica
+version: '${version}'
+
+main: com.azerl0.acoustica.Acoustica
+bootstrapper: com.azerl0.acoustica.AcousticaBootstrap
+api-version: '26.2'
+load: POSTWORLD
+
+authors: [ AZer0 ]
