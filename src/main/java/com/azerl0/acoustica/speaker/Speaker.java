@@ -2,38 +2,35 @@ package com.azerl0.acoustica.speaker;
 
 import com.azerl0.acoustica.Acoustica;
 import com.azerl0.acoustica.nbs.*;
-import com.azerl0.acoustica.util.NbsUtil;
+import com.azerl0.acoustica.song.Song;
+import com.azerl0.acoustica.song.SongNote;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 public class Speaker {
+    private final UUID uuid;
     private final SpeakerManager manager;
-    private Location location;
+    private final Location location;
     private int tick;
-    private NbsSong song;
-    private List<NbsNote> currentNotes = List.of();
+    private @Nullable Song song;
+    private List<SongNote> currentNotes = List.of();
     private boolean stop;
-    private ScheduledTask task;
+    private final ScheduledTask task;
 
-    public Speaker(Location location, SpeakerManager manager) {
+    public Speaker(UUID uuid, Location location, SpeakerManager manager) {
+        this.uuid = uuid;
         this.manager = manager;
         this.location = location;
         stop = true;
+        tick = 0;
+
         resetCurrentNotes();
-
-        try {
-            song = NbsReader.read(Path.of(""));
-            resetCurrentNotes();
-        } catch (IOException _) {
-        }
-
         task = Bukkit.getServer().getRegionScheduler().runAtFixedRate(Acoustica.getInstance(), location, task -> {
             onTick();
         }, 1L, 1L);
@@ -42,29 +39,36 @@ public class Speaker {
     protected void onTick() {
         if (stop) return;
         while (!currentNotes.isEmpty()) {
-            NbsNote note = currentNotes.getFirst();
+            SongNote note = currentNotes.getFirst();
             if (note == null) break;
-            float speed = (float) (20 / song.getMeta().getTempo());
-            int songTick = (int) (note.getTick() * speed);
-            if (songTick > tick) break;
+            if (note.getTick() > tick) break;
             currentNotes.removeFirst();
+            for (Player player : location.getNearbyPlayers(64)) {
+                double distance = player.getLocation().distance(location);
+                float playerVolume = 1.0f -  (float) (distance / 64);
+                player.playSound(player, note.getSound(), SoundCategory.RECORDS, note.getVolume() * playerVolume * 0.9f, note.getPitch());
+            }
 
-            Sound sound = NoteInstrument.getSoundFromNumber(note.getInstrument());
-            if (sound == null) continue;
+        }
+        if (tick % 20 == 0 && !currentNotes.isEmpty()) {
+            Location particleLoc = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ()).add(0.5, 0.0, 0.5);
+            Particle.NOTE.builder().location(particleLoc).count(1).spawn();
 
-            NbsLayer layer = new NbsLayer("_", false, 100, 100);
-            if (song.getLayers().size() > note.getLayer()) layer = song.getLayers().get(note.getLayer());
-            float volume = (float) layer.getVolume() / 10000 * note.getVelocity();
-            if (volume <= 0.0f) continue;
-            int key = note.getKey() + note.getPitch() / 100;
-            float pitch = NbsUtil.getPitch(key);
-            location.getWorld().playSound(location, sound, volume, pitch);
         }
         tick++;
     }
 
+    public @NotNull UUID getUniqueId() {
+        return uuid;
+    }
+
     public @NotNull Location getLocation() {
         return location;
+    }
+
+    public void setSong(Song song) {
+        this.song = song;
+        resetCurrentNotes();
     }
 
     public void start() {
@@ -82,11 +86,12 @@ public class Speaker {
     }
 
     public void remove() {
+        stop();
         task.cancel();
         manager.removeSpeaker(this);
     }
 
     private void resetCurrentNotes() {
-        currentNotes = song.getNotes();
+        if (song != null) currentNotes = song.getNotes();
     }
 }

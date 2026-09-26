@@ -1,21 +1,29 @@
 package com.azerl0.acoustica.speaker;
 
 import org.bukkit.Location;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SpeakerManager {
-    private final Set<Speaker> speakers = new HashSet<>();
+    private final Map<UUID, Speaker> speakers = new HashMap<>();
 
-    public Speaker createSpeaker(Location location) {
-        Speaker speaker = new Speaker(location, this);
-        speakers.add(speaker);
+    public Speaker createSpeaker(UUID uuid, Location location) {
+        Speaker speaker = new Speaker(uuid, location, this);
+        speakers.put(uuid, speaker);
         return speaker;
     }
 
-    public Set<Speaker> getSpeakers() {
-        return speakers;
+    public Speaker createSpeaker(Location location) {
+        return createSpeaker(UUID.randomUUID(), location);
+    }
+
+    public @Nullable Speaker getSpeaker(UUID uuid) {
+        return speakers.getOrDefault(uuid, null);
+    }
+
+    public Collection<Speaker> getSpeakers() {
+        return speakers.values();
     }
 
     public Set<Speaker> getNearbySpeakers(Location location, double r) {
@@ -30,6 +38,6 @@ public class SpeakerManager {
     }
 
     protected void removeSpeaker(Speaker speaker) {
-        speakers.remove(speaker);
+        speakers.remove(speaker.getUniqueId());
     }
 }
