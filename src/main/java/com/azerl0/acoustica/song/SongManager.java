@@ -14,6 +14,10 @@ public class SongManager {
         return songs.getOrDefault(songId, null);
     }
 
+    public void clearSongs() {
+        songs.clear();
+    }
+
     public void addSong(String songId, Song song) {
         songs.put(songId, song);
     }

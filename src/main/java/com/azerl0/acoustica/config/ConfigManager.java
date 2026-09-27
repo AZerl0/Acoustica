@@ -5,9 +5,7 @@ import com.azerl0.acoustica.nbs.NbsReader;
 import com.azerl0.acoustica.nbs.NbsSong;
 import com.azerl0.acoustica.song.Song;
 import com.azerl0.acoustica.song.SongManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -39,21 +37,25 @@ public class ConfigManager {
     }
 
     public void loadSongs(SongManager songManager) {
-        ConfigurationSection songs = config.getConfigurationSection("songs");
-        if (songs == null) return;
+        Bukkit.getServer().getAsyncScheduler().runNow(Acoustica.getInstance(), task -> {
+            ConfigurationSection songs = config.getConfigurationSection("songs");
+            if (songs == null) return;
 
-        for (String id : songs.getKeys(false)) {
-            String fileName = songs.getString(id);
-            if (fileName == null) continue;
-            Path path = acoustica.getDataPath().resolve("songs").resolve(fileName + ".nbs");
-            NbsSong nbsSong;
-            try {
-                nbsSong = NbsReader.read(path);
-            } catch (IOException _) {
-                continue;
+            songManager.clearSongs();
+            for (String id : songs.getKeys(false)) {
+                String fileName = songs.getString(id);
+                if (fileName == null) continue;
+                Path path = acoustica.getDataPath().resolve("songs").resolve(fileName + ".nbs");
+                NbsSong nbsSong;
+                try {
+                    nbsSong = NbsReader.read(path);
+                } catch (IOException _) {
+                    continue;
+                }
+                Song song = Song.fromNbsSong(nbsSong);
+                songManager.addSong(id, song);
             }
-            Song song = Song.fromNbsSong(nbsSong);
-            songManager.addSong(id, song);
-        }
+
+        });
     }
 }
