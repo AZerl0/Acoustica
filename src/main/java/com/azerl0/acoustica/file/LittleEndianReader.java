@@ -60,20 +60,4 @@ public class LittleEndianReader {
 
         return new String(bytes, StandardCharsets.UTF_8);
     }
-
-    public boolean hasRemaining() throws IOException {
-        if (input.markSupported()) {
-            input.mark(1);
-
-            int nextByte = input.read();
-            if (nextByte != -1) {
-                input.read();
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
 }

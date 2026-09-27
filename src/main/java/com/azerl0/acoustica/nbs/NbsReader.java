@@ -177,24 +177,22 @@ public class NbsReader {
             List<NbsLayer> layers =
                     new ArrayList<>();
 
-           if (reader.hasRemaining()) {
-               for (int i = 0; i < layerCount; i++) {
+            for (int i = 0; i < layerCount; i++) {
 
-                   String layerName =
-                           reader.readString();
+                String layerName =
+                        reader.readString();
 
-                   boolean locked =
-                           reader.readByte() == 1;
+                boolean locked =
+                        reader.readByte() == 1;
 
-                   int volume =
-                           reader.readByte();
+                int volume =
+                        reader.readByte();
 
-                   int stereo =
-                           reader.readByte();
+                int stereo =
+                        reader.readByte();
 
-                   layers.set(i, new NbsLayer(layerName, locked, volume, stereo));
-               }
-           }
+                layers.add(new NbsLayer(layerName, locked, volume, stereo));
+            }
 
 
             // ========================
@@ -204,35 +202,33 @@ public class NbsReader {
             List<NbsCustomInstrument> customInstruments =
                     new ArrayList<>();
 
-            if (reader.hasRemaining()) {
+            int count =
+                    reader.readByte();
 
-                int count =
+            for (int i = 0; i < count; i++) {
+
+                String instrumentName =
+                        reader.readString();
+
+                String soundFile =
+                        reader.readString();
+
+                int key =
                         reader.readByte();
 
-                for (int i = 0; i < count; i++) {
+                boolean press =
+                        reader.readByte() == 1;
 
-                    String instrumentName =
-                            reader.readString();
+                customInstruments.add(
+                        new NbsCustomInstrument(
+                                i,
+                                instrumentName,
+                                soundFile,
+                                key,
+                                press
+                        )
+                );
 
-                    String soundFile =
-                            reader.readString();
-
-                    int key =
-                            reader.readByte();
-
-                    boolean press =
-                            reader.readByte() == 1;
-
-                    customInstruments.add(
-                            new NbsCustomInstrument(
-                                    i,
-                                    instrumentName,
-                                    soundFile,
-                                    key,
-                                    press
-                            )
-                    );
-                }
             }
             return new NbsSong(
                     meta,
