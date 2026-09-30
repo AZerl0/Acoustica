@@ -30,7 +30,7 @@ public class NoteInstrument {
             };
         } else {
             int i = num - 16;
-            if (customInstruments.size() >= i) {
+            if (customInstruments.size() > i) {
                 // SPECIAL
                 String fileName = customInstruments.get(i).getSoundFile();
                 return switch (fileName) {
@@ -41,6 +41,7 @@ public class NoteInstrument {
                     case "minecraft/random/fizz.ogg" -> Sound.ENTITY_GENERIC_BURN;
                     case "minecraft/dig/stone.ogg" -> Sound.BLOCK_STONE_BREAK;
                     case "minecraft/entity/shulker/hurt_closed1.ogg" -> Sound.ENTITY_SHULKER_HURT_CLOSED;
+                    case "minecraft/fireworks/blast_far1.ogg" -> Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR;
                     default -> null;
                 };
             } else {

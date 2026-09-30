@@ -31,9 +31,7 @@ public class Speaker {
         tick = 0;
 
         resetCurrentNotes();
-        task = Bukkit.getServer().getRegionScheduler().runAtFixedRate(Acoustica.getInstance(), location, task -> {
-            onTick();
-        }, 1L, 1L);
+        task = Bukkit.getServer().getRegionScheduler().runAtFixedRate(Acoustica.getInstance(), location, _ -> onTick(), 1L, 1L);
     }
 
     protected void onTick() {

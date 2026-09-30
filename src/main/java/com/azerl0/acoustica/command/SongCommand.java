@@ -8,6 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 import static io.papermc.paper.command.brigadier.Commands.literal;
@@ -28,11 +29,11 @@ public class SongCommand {
 
     private static int list(CommandContext<CommandSourceStack> context) {
         CommandSender sender = context.getSource().getSender();
-        Component message = Component.text("Songs(" + getSongManager().getSongs().size() + "):");
+        Component message = Component.text("Songs(" + getSongManager().getSongs().size() + "):").color(NamedTextColor.AQUA);
         for (String songId : getSongManager().getSongs().keySet()) {
             Song song = getSongManager().getSong(songId);
             if (song == null) continue;
-            message = message.append(Component.text("\n- ").append(Component.text(songId + "(")).append(song.getSongName()).append(Component.text(")")));
+            message = message.append(Component.text("\n- ").append(Component.text(songId + "(")).append(song.getSongName()).append(Component.text(")"))).color(NamedTextColor.WHITE);
         }
 
         sender.sendMessage(message);
