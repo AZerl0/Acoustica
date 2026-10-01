@@ -22,3 +22,6 @@ run
 
 # dev
 .dev/
+
+# Local properties
+local.properties

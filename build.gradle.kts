@@ -1,3 +1,17 @@
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use(::load)
+    }
+}
+
+val serverPluginsDir = file(
+    localProperties.getProperty("deployDir")
+        ?: throw GradleException("deployDir is not set in local.properties")
+)
+
 plugins {
     id("java-library")
     id("xyz.jpenilla.run-paper") version "3.1.0"
@@ -31,4 +45,11 @@ tasks {
             expand(props)
         }
     }
+}
+
+tasks.register<Copy>("deployPlugin") {
+    dependsOn(tasks.jar)
+
+    from(tasks.jar)
+    into(serverPluginsDir)
 }
