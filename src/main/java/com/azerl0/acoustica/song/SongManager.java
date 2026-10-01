@@ -18,8 +18,16 @@ public class SongManager {
         songs.clear();
     }
 
+    public boolean hasSong(String songId) {
+        return songs.containsKey(songId);
+    }
+
     public void addSong(String songId, Song song) {
         songs.put(songId, song);
+    }
+
+    public void deleteSong(String songId) {
+        songs.remove(songId);
     }
 
     public Map<String, Song> getSongs() {

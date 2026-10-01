@@ -33,7 +33,7 @@ public class SongCommand {
         for (String songId : getSongManager().getSongs().keySet()) {
             Song song = getSongManager().getSong(songId);
             if (song == null) continue;
-            message = message.append(Component.text("\n- ").append(Component.text(songId + "(")).append(song.getSongName()).append(Component.text(")"))).color(NamedTextColor.WHITE);
+            message = message.append(Component.text("\n- ").append(song.getSongName()).append(Component.text(" (" + songId + ")")).color(NamedTextColor.WHITE));
         }
 
         sender.sendMessage(message);
