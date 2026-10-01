@@ -65,7 +65,7 @@ public class ConfigManager {
                 Component name = Component.text(id);
                 String legacy = songSec.getString("name");
                 if (legacy != null) name = LegacyComponentSerializer.legacyAmpersand().deserialize(legacy);
-                Song song = new Song(name,notes, volume, fileName);
+                Song song = new Song(id, name,notes, volume, fileName);
                 songManager.addSong(id, song);
             }
 

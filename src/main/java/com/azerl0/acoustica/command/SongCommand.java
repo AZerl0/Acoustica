@@ -4,13 +4,16 @@ import com.azerl0.acoustica.Acoustica;
 import com.azerl0.acoustica.song.Song;
 import com.azerl0.acoustica.song.SongManager;
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
+import static io.papermc.paper.command.brigadier.Commands.argument;
 import static io.papermc.paper.command.brigadier.Commands.literal;
 
 public class SongCommand {
@@ -21,6 +24,8 @@ public class SongCommand {
                         .then(literal("list")
                                 .executes(SongCommand::list))
                         .then(literal("reload").executes(SongCommand::reload))
+                        .then(literal("info").then(argument("songId", StringArgumentType.word())
+                                .executes(SongCommand::info)))
 
                         .build(),
                 "Song command"
@@ -46,8 +51,29 @@ public class SongCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    private static int info(CommandContext<CommandSourceStack> context) {
+        CommandSender sender = context.getSource().getSender();
+        String id = context.getArgument("songId", String.class);
+        Song song = getSongManager().getSong(id);
+        if (song == null) {
+            sender.sendMessage(String.format("There is no song with the ID \"%s\".", id));
+        } else {
+            sender.sendMessage(getSongInfoMessage(song));
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
     private static SongManager getSongManager() {
         return Acoustica.getInstance().getSongManager();
     }
 
+    private static Component getSongInfoMessage(@NotNull Song song) {
+        Component message = Component.text("Song info (id: " + song.getId() + ")").color(NamedTextColor.AQUA);
+        message = message.append(Component.text("\nSongName: ").append(song.getSongName())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\nSongFileName: " + song.getFileName())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\nSongVolume: " + song.getVolume())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\nSongNotes: " + song.getNotes().size())).color(NamedTextColor.WHITE);
+        return message;
+    }
 }
