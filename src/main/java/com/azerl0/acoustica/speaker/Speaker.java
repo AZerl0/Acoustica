@@ -4,6 +4,7 @@ import com.azerl0.acoustica.Acoustica;
 import com.azerl0.acoustica.nbs.*;
 import com.azerl0.acoustica.song.Song;
 import com.azerl0.acoustica.song.SongNote;
+import com.azerl0.acoustica.util.AdvancementUtil;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -35,7 +36,7 @@ public class Speaker {
         task = Bukkit.getServer().getRegionScheduler().runAtFixedRate(Acoustica.getInstance(), location, _ -> onTick(), 1L, 1L);
     }
 
-    protected void onTick() {
+    private void onTick() {
         if (stop) return;
         while (!currentNotes.isEmpty()) {
             SongNote note = currentNotes.getFirst();
@@ -53,6 +54,14 @@ public class Speaker {
             Location particleLoc = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ()).add(0.5, 0.0, 0.5);
             Particle.NOTE.builder().location(particleLoc).count(1).spawn();
 
+            if (song != null) {
+                for (Player player : location.getNearbyPlayers(5)) {
+                    AdvancementUtil.grantAdvancement(player, "acoustica:root");
+                    for (String advPath : song.getAdvancementKeys()) {
+                        AdvancementUtil.grantAdvancement(player, advPath);
+                    }
+                }
+            }
         }
         tick++;
     }

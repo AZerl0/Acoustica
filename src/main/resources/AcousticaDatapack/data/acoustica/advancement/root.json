@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:block/calcite",
+    "description": {
+      "text": "Play song"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:jukebox"
+    },
+    "show_toast": false,
+    "title": {
+      "text": "Acoustica",
+      "italic": false
+    }
+  },
+  "requirements": [
+    [
+      "impossible"
+    ]
+  ],
+  "sends_telemetry_event": false
+}
