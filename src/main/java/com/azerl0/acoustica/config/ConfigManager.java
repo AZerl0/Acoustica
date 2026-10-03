@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,6 +29,11 @@ public class ConfigManager {
     public void processConfigs() {
         config = acoustica.getConfig();
         defaultConfig = new Config(config);
+        File songsFolder = new File(acoustica.getDataFolder(), "songs");
+
+        if (!songsFolder.exists()) {
+            songsFolder.mkdirs();
+        }
         loadSongs(Acoustica.getInstance().getSongManager());
     }
 
