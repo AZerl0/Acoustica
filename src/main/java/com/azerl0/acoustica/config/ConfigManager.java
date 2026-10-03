@@ -47,7 +47,7 @@ public class ConfigManager {
     }
 
     public void loadSongs(SongManager songManager) {
-        Bukkit.getServer().getAsyncScheduler().runNow(Acoustica.getInstance(), task -> {
+        Bukkit.getServer().getAsyncScheduler().runNow(Acoustica.getInstance(), _ -> {
             ConfigurationSection songs = config.getConfigurationSection("songs");
             if (songs == null) return;
 
