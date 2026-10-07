@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ConfigManager {
     private final Acoustica acoustica;
@@ -51,19 +52,27 @@ public class ConfigManager {
             ConfigurationSection songs = config.getConfigurationSection("songs");
             if (songs == null) return;
 
+            getLogger().info("start load songs");
             songManager.clearSongs();
             for (String id : songs.getKeys(false)) {
                 ConfigurationSection songSec = songs.getConfigurationSection(id);
-                if (songSec == null) continue;
+                if (songSec == null) {
+                    getLogger().warning("failed load song section. id: " + id);
+                    continue;
+                }
 
                 String fileName = songSec.getString("fileName");
-                if (fileName == null) continue;
+                if (fileName == null) {
+                    getLogger().warning("failed load song file name. id: " + id);
+                    continue;
+                }
 
                 Path path = acoustica.getDataPath().resolve("songs").resolve(fileName + ".nbs");
                 NbsSong nbsSong;
                 try {
                     nbsSong = NbsReader.read(path);
-                } catch (IOException _) {
+                } catch (IOException e) {
+                    getLogger().warning("failed load nbs file. id: " + id + ", message: " + e.getMessage());
                     continue;
                 }
                 float volume = (float) songSec.getDouble("volume", 1.0);
@@ -75,7 +84,12 @@ public class ConfigManager {
                 Song song = new Song(id, name,notes, volume, fileName, advancements);
                 songManager.addSong(id, song);
             }
+            getLogger().info("complete load songs");
 
         });
+    }
+
+    private Logger getLogger() {
+        return acoustica.getLogger();
     }
 }
