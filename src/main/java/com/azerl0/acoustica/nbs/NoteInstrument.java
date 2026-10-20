@@ -7,8 +7,9 @@ import java.util.List;
 
 public class NoteInstrument {
 
-    public static @Nullable Sound getSoundFromNumber(int num, List<NbsCustomInstrument> customInstruments) {
-        if (num <= 15) {
+    public static @Nullable Sound getSoundFromNumber(int num, List<NbsCustomInstrument> customInstruments, int version) {
+        int builtInSoundSize = version >= 6 ? 20 : 16;
+        if (num < builtInSoundSize) {
             return switch (num) {
                 case 0 -> Sound.BLOCK_NOTE_BLOCK_HARP;
                 case 1 -> Sound.BLOCK_NOTE_BLOCK_BASS;
@@ -26,10 +27,14 @@ public class NoteInstrument {
                 case 13 -> Sound.BLOCK_NOTE_BLOCK_BIT;
                 case 14 -> Sound.BLOCK_NOTE_BLOCK_BANJO;
                 case 15 -> Sound.BLOCK_NOTE_BLOCK_PLING;
+                case 16 -> Sound.BLOCK_NOTE_BLOCK_TRUMPET;
+                case 17 -> Sound.BLOCK_NOTE_BLOCK_TRUMPET_EXPOSED;
+                case 18 -> Sound.BLOCK_NOTE_BLOCK_TRUMPET_WEATHERED;
+                case 19 -> Sound.BLOCK_NOTE_BLOCK_TRUMPET_OXIDIZED;
                 default -> null;
             };
         } else {
-            int i = num - 16;
+            int i = num - builtInSoundSize;
             if (customInstruments.size() > i) {
                 // SPECIAL
                 String fileName = customInstruments.get(i).getSoundFile();

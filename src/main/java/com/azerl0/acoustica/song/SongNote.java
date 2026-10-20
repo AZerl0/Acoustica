@@ -52,7 +52,7 @@ public class SongNote {
         for (NbsNote nbsNote : nbsSong.getNotes()) {
             int songTick = (int) (nbsNote.getTick() * speed);
 
-            Sound sound = NoteInstrument.getSoundFromNumber(nbsNote.getInstrument(), nbsSong.getCustomInstruments());
+            Sound sound = NoteInstrument.getSoundFromNumber(nbsNote.getInstrument(), nbsSong.getCustomInstruments(), nbsSong.getMeta().getVersion());
             if (sound == null) continue;
 
             NbsLayer layer = new NbsLayer("_", false, 100, 100);
