@@ -44,7 +44,7 @@ public class NoteInstrument {
                     case "minecraft/portal/trigger.ogg" -> Sound.BLOCK_PORTAL_TRIGGER;
                     case "minecraft/random/orb.ogg" -> Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
                     case "minecraft/random/fizz.ogg" -> Sound.ENTITY_GENERIC_BURN;
-                    case "minecraft/dig/stone.ogg" -> Sound.BLOCK_STONE_BREAK;
+                    case "minecraft/dig/stone.ogg", "minecraft/dig/stone1.ogg" -> Sound.BLOCK_STONE_BREAK;
                     case "minecraft/entity/shulker/hurt_closed1.ogg" -> Sound.ENTITY_SHULKER_HURT_CLOSED;
                     case "minecraft/fireworks/blast_far1.ogg" -> Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR;
                     default -> null;
