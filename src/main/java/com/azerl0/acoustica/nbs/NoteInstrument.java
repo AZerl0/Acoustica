@@ -47,6 +47,7 @@ public class NoteInstrument {
                     case "minecraft/dig/stone.ogg", "minecraft/dig/stone1.ogg" -> Sound.BLOCK_STONE_BREAK;
                     case "minecraft/entity/shulker/hurt_closed1.ogg" -> Sound.ENTITY_SHULKER_HURT_CLOSED;
                     case "minecraft/fireworks/blast_far1.ogg" -> Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR;
+                    case "minecraft/damage/fallsmall.ogg" -> Sound.ENTITY_GENERIC_SMALL_FALL;
                     default -> null;
                 };
             } else {
