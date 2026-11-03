@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class PlayList {
+    public static final int SONG_FINISH_OFFSET_TICK = 2 * 20;
+
     private final PlayListManager playListManager;
     private final Block jukebox;
     private final PlayListGUI gui;
@@ -41,7 +43,16 @@ public class PlayList {
 
     public void play() {
         if (speaker.getSong() != null) {
-            speaker.start();
+            Chest chest = getSingleChest();
+            if (chest == null) return;
+            Inventory inventory = chest.getInventory();
+            ItemStack topItem = inventory.getItem(0);
+            if (topItem != null && !topItem.isEmpty()) {
+                speaker.start();
+
+            } else {
+                skip(0);
+            }
         } else {
             skip(0);
         }
@@ -84,6 +95,15 @@ public class PlayList {
         Song song = speaker.getSong();
         if (song != null) {
             gui.updatePlayingSongDisplay();
+            if (!speaker.isPause()) {
+                Chest chest = getSingleChest();
+                if (chest == null) return;
+                Inventory inventory = chest.getInventory();
+                ItemStack topItem = inventory.getItem(0);
+                if (topItem == null || topItem.isEmpty()) {
+                    skip(0);
+                }
+            }
         }
     }
 
@@ -115,7 +135,7 @@ public class PlayList {
         Chest chest = getSingleChest();
         if (chest == null) return null;
 
-        Inventory inventory = chest.getInventory();;
+        Inventory inventory = chest.getInventory();
         for (int i = skipOffset; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
             if (item == null) {
@@ -137,7 +157,8 @@ public class PlayList {
         Chest chest = getSingleChest();
         if (chest == null) return null;
 
-        Inventory inventory = chest.getInventory();;
+        Inventory inventory = chest.getInventory();
+        ;
         for (int i = inventory.getSize() - prevOffset; i >= 0; i--) {
             ItemStack item = inventory.getItem(i);
             if (item == null) {
