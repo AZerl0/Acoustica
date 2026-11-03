@@ -59,6 +59,10 @@ public final class Acoustica extends JavaPlugin {
         return speakerManager;
     }
 
+    public PlayListManager getPlayListManager() {
+        return playListManager;
+    }
+
     public EntityLocationSpeakerManager getEntityLocationSpeakerManager() {
         return entityLocationSpeakerManager;
     }
