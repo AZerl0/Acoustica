@@ -56,6 +56,18 @@ public class PlayListGUI extends AbstractGUI {
         addButton(17, getAbstractSimpleButtonItem(Material.BROWN_EGG, Component.text("次の曲を再生")), event -> {
             playList.skip();
         });
+
+        addButton(18, getAbstractSimpleButtonItem(Material.GUNPOWDER, Component.text("音量を上げる"), List.of(Component.text("クリックして音量を 5% 上げる").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))), event -> {
+            addVolume(0.05f);
+            updateVolumeDisplay();
+        });
+
+        updateVolumeDisplay();
+
+        addButton(20, getAbstractSimpleButtonItem(Material.GLOWSTONE_DUST, Component.text("音量を下げる"), List.of(Component.text("クリックして音量を 5% 下げる").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))), event -> {
+            addVolume(-0.05f);
+            updateVolumeDisplay();
+        });
     }
 
     public void updatePauseButton() {
@@ -101,6 +113,24 @@ public class PlayListGUI extends AbstractGUI {
         itemStack.setItemMeta(meta);
 
         addButton(4, itemStack, _ -> {});
+    }
+
+    public void updateVolumeDisplay() {
+        int volume = (int) (playList.getSpeaker().getVolume() * 100);
+        addButton(19, getAbstractSimpleButtonItem(Material.BELL, Component.text("音量"), List.of(
+                Component.text("現在の音量: " + volume + "%").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false)
+        )), _ -> {});
+    }
+
+    private void addVolume(float volume) {
+        float speakerVolume = Math.clamp(
+                playList.getSpeaker().getVolume() + volume,
+                0.0f,
+                1.0f
+        );
+        speakerVolume = (float) Math.floor(speakerVolume / 0.05f);
+        speakerVolume = speakerVolume * 0.05f;
+        playList.getSpeaker().setVolume(speakerVolume);
     }
 
     @Override

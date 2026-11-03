@@ -29,5 +29,9 @@ public interface Speaker {
 
     void setTick(int tick);
 
+    float getVolume();
+
+    void setVolume(float volume);
+
     void remove();
 }

@@ -22,6 +22,7 @@ public class SpeakerImpl implements Speaker {
     private int tick;
     private @Nullable Song song;
     private List<SongNote> currentNotes = List.of();
+    private float speakerVolume = 1.0f;
     private float currentSongVolume;
     private boolean pause;
     private final ScheduledTask task;
@@ -47,7 +48,8 @@ public class SpeakerImpl implements Speaker {
             for (Player player : location.getNearbyPlayers(64)) {
                 double distance = player.getLocation().distance(location);
                 float playerVolume = 1.0f - (float) (distance / 64);
-                player.playSound(player, note.getSound(), SoundCategory.RECORDS, note.getVolume() * playerVolume * currentSongVolume, note.getPitch());
+                float volume = note.getVolume() * playerVolume * currentSongVolume * speakerVolume;
+                player.playSound(player, note.getSound(), SoundCategory.RECORDS, volume, note.getPitch());
             }
 
         }
@@ -158,6 +160,16 @@ public class SpeakerImpl implements Speaker {
             }
         }
 
+    }
+
+    @Override
+    public float getVolume() {
+        return speakerVolume;
+    }
+
+    @Override
+    public void setVolume(float volume) {
+        speakerVolume = volume;
     }
 
     private void resetCurrentNotes() {
