@@ -172,6 +172,12 @@ public class SpeakerImpl implements Speaker {
         speakerVolume = volume;
     }
 
+    @Override
+    public boolean songIsFinished() {
+        if (song == null) return false;
+        return tick > song.getNotes().getLast().getTick() + SONG_FINISH_OFFSET_TICK;
+    }
+
     private void resetCurrentNotes() {
         if (song != null) currentNotes = song.getNotes();
     }

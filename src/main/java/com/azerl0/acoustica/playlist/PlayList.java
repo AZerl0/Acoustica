@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class PlayList {
-    public static final int SONG_FINISH_OFFSET_TICK = 2 * 20;
-
     private final PlayListManager playListManager;
     private final Block jukebox;
     private final PlayListGUI gui;
@@ -102,6 +100,10 @@ public class PlayList {
                 ItemStack topItem = inventory.getItem(0);
                 if (topItem == null || topItem.isEmpty()) {
                     skip(0);
+                }
+
+                if (speaker.songIsFinished()) {
+                    skip(1);
                 }
             }
         }

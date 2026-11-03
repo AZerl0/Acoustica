@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public interface Speaker {
+    int SONG_FINISH_OFFSET_TICK = 2 * 20;
+
 
     @NotNull UUID getUniqueId();
 
@@ -32,6 +34,8 @@ public interface Speaker {
     float getVolume();
 
     void setVolume(float volume);
+
+    boolean songIsFinished();
 
     void remove();
 }
