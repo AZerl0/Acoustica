@@ -1,5 +1,6 @@
 package com.azerl0.acoustica.speaker;
 
+import com.azerl0.acoustica.api.speaker.Speaker;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +19,7 @@ public class EntityLocationSpeakerManager {
         return speakerManager.getSpeaker(entity.getUniqueId());
     }
 
-    public Speaker createSpeaker(Entity entity) {
+    public SpeakerImpl createSpeaker(Entity entity) {
         return speakerManager.createSpeaker(entity.getUniqueId(), entity.getLocation());
     }
 

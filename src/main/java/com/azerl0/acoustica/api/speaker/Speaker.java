@@ -1,0 +1,33 @@
+package com.azerl0.acoustica.api.speaker;
+
+import com.azerl0.acoustica.song.Song;
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
+
+public interface Speaker {
+
+    @NotNull UUID getUniqueId();
+
+    @NotNull Location getLocation();
+
+    @Nullable Song getSong();
+
+    boolean isPause();
+
+    void start();
+
+    void stop();
+
+    void pause();
+
+    void setSong(@NotNull Song song);
+
+    int getTick();
+
+    void setTick(int tick);
+
+    void remove();
+}

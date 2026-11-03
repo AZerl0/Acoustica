@@ -4,7 +4,7 @@ import com.azerl0.acoustica.song.Song;
 import com.azerl0.acoustica.song.SongManager;
 import com.azerl0.acoustica.songitem.SongItem;
 import com.azerl0.acoustica.speaker.EntityLocationSpeakerManager;
-import com.azerl0.acoustica.speaker.Speaker;
+import com.azerl0.acoustica.speaker.SpeakerImpl;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -44,9 +44,9 @@ public class ItemFrameListener implements Listener {
                 Song song = songManager.getSong(songId);
                 if (song == null) return;
 
-                Speaker speaker = entityLocationSpeakerManager.createSpeaker(itemFrame);
-                speaker.setSong(song);
-                speaker.start();
+                SpeakerImpl speakerImpl = entityLocationSpeakerManager.createSpeaker(itemFrame);
+                speakerImpl.setSong(song);
+                speakerImpl.start();
             }
         }
     }

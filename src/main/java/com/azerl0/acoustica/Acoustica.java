@@ -3,6 +3,8 @@ package com.azerl0.acoustica;
 import com.azerl0.acoustica.config.ConfigManager;
 import com.azerl0.acoustica.gui.GUIListener;
 import com.azerl0.acoustica.itemframe.ItemFrameListener;
+import com.azerl0.acoustica.playlist.PlayListListener;
+import com.azerl0.acoustica.playlist.PlayListManager;
 import com.azerl0.acoustica.song.SongManager;
 import com.azerl0.acoustica.speaker.EntityLocationSpeakerListener;
 import com.azerl0.acoustica.speaker.EntityLocationSpeakerManager;
@@ -18,6 +20,7 @@ public final class Acoustica extends JavaPlugin {
     private SpeakerManager speakerManager;
     private EntityLocationSpeakerManager entityLocationSpeakerManager;
     private SongManager songManager;
+    private PlayListManager playListManager;
 
     @Override
     public void onEnable() {
@@ -26,6 +29,7 @@ public final class Acoustica extends JavaPlugin {
         speakerManager = new SpeakerManager();
         entityLocationSpeakerManager = new EntityLocationSpeakerManager(speakerManager);
         songManager = new SongManager();
+        playListManager = new PlayListManager();
 
         saveDefaultConfig();
         configManager.processConfigs();
@@ -35,6 +39,7 @@ public final class Acoustica extends JavaPlugin {
         pluginManager.registerEvents(new EntityLocationSpeakerListener(entityLocationSpeakerManager), this);
         pluginManager.registerEvents(new ItemFrameListener(entityLocationSpeakerManager, songManager), this);
         pluginManager.registerEvents(new GUIListener(), this);
+        pluginManager.registerEvents(new PlayListListener(playListManager), this);
     }
 
     @Override

@@ -1,13 +1,13 @@
 package com.azerl0.acoustica.command;
 
 import com.azerl0.acoustica.Acoustica;
-import com.azerl0.acoustica.speaker.Speaker;
+import com.azerl0.acoustica.api.speaker.Speaker;
+import com.azerl0.acoustica.speaker.SpeakerImpl;
 import com.azerl0.acoustica.speaker.SpeakerManager;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import static io.papermc.paper.command.brigadier.Commands.literal;
@@ -51,8 +51,8 @@ public class SpeakerCommand {
 
     private static int remove(CommandContext<CommandSourceStack> context) {
         if (context.getSource().getSender() instanceof Player player) {
-            for (Speaker speaker : getSpeakerManager().getNearbySpeakers(player.getLocation(), 3)) {
-                speaker.remove();
+            for (SpeakerImpl speakerImpl : getSpeakerManager().getNearbySpeakers(player.getLocation(), 3)) {
+                speakerImpl.remove();
                 player.sendMessage("remove speaker");
             }
         }
@@ -61,8 +61,8 @@ public class SpeakerCommand {
 
     private static int start(CommandContext<CommandSourceStack> context) {
         if (context.getSource().getSender() instanceof Player player) {
-            for (Speaker speaker : getSpeakerManager().getNearbySpeakers(player.getLocation(), 3)) {
-                speaker.start();
+            for (SpeakerImpl speakerImpl : getSpeakerManager().getNearbySpeakers(player.getLocation(), 3)) {
+                speakerImpl.start();
                 player.sendMessage("start");
             }
         }
