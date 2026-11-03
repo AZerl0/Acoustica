@@ -57,15 +57,15 @@ public class PlayListGUI extends AbstractGUI {
             playList.skip();
         });
 
-        addButton(18, getAbstractSimpleButtonItem(Material.GUNPOWDER, Component.text("音量を上げる"), List.of(Component.text("クリックして音量を 5% 上げる").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))), event -> {
-            addVolume(0.05f);
+        addButton(18, getAbstractSimpleButtonItem(Material.GUNPOWDER, Component.text("音量を下げる"), List.of(Component.text("クリックして音量を 5% 下げる").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))), event -> {
+            addVolume(-0.05f);
             updateVolumeDisplay();
         });
 
         updateVolumeDisplay();
 
-        addButton(20, getAbstractSimpleButtonItem(Material.GLOWSTONE_DUST, Component.text("音量を下げる"), List.of(Component.text("クリックして音量を 5% 下げる").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))), event -> {
-            addVolume(-0.05f);
+        addButton(20, getAbstractSimpleButtonItem(Material.GLOWSTONE_DUST, Component.text("音量を上げる"), List.of(Component.text("クリックして音量を 5% 上げる").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))), event -> {
+            addVolume(0.05f);
             updateVolumeDisplay();
         });
     }
