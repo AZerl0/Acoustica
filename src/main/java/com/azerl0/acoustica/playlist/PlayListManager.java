@@ -16,18 +16,16 @@ public class PlayListManager {
 
 
     public @Nullable PlayList getPlayList(@NotNull Location location) {
+        Location loc = getKeyLocation(location);
+        if (playListMap.containsKey(loc)) {
+            return playListMap.get(loc);
+        }
         if (location.getBlock().getState() instanceof Jukebox && location.clone().add(0.0, 1.0, 0.0).getBlock().getState() instanceof Chest chest) {
             if (chest.getInventory().getSize() == 27) {
 
-
-                Location loc = getKeyLocation(location);
-                if (playListMap.containsKey(loc)) {
-                    return playListMap.get(loc);
-                } else {
-                    PlayList playList = new PlayList(this, location.getBlock());
-                    playListMap.put(loc, playList);
-                    return playList;
-                }
+                PlayList playList = new PlayList(this, location.getBlock());
+                playListMap.put(loc, playList);
+                return playList;
             }
         }
         return null;

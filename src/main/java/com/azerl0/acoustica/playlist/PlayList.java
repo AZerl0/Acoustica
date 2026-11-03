@@ -275,5 +275,6 @@ public class PlayList {
     public void remove() {
         speaker.remove();
         task.cancel();
+        playListManager.onRemovePlayList(this);
     }
 }
