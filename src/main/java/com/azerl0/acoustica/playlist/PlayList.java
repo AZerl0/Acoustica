@@ -20,11 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class PlayList {
-    private PlayListManager playListManager;
+    private final PlayListManager playListManager;
     private final Block jukebox;
-    private int slot;
-    private PlayListGUI gui;
-    private Speaker speaker;
+    private final PlayListGUI gui;
+    private final Speaker speaker;
     private final ScheduledTask task;
     private @Nullable ItemStack playingSongItem;
 
@@ -54,6 +53,19 @@ public class PlayList {
 
     public void skip(int skipOffset) {
         String songId = setNextSong(skipOffset);
+        setSong(songId);
+    }
+
+    public void previous() {
+        previous(1);
+    }
+
+    public void previous(int prevOffset) {
+        String songId = setPreviousSong(prevOffset);
+        setSong(songId);
+    }
+
+    private void setSong(String songId) {
         speaker.stop();
         if (songId != null) {
             Song song = Acoustica.getInstance().getSongManager().getSong(songId);
@@ -61,7 +73,10 @@ public class PlayList {
                 speaker.setSong(song);
                 speaker.start();
             }
+        } else {
+            speaker.setSong(null);
         }
+        gui.updatePauseButton();
     }
 
     private void onTick() {
@@ -97,26 +112,43 @@ public class PlayList {
     }
 
     private @Nullable String setNextSong(int skipOffset) {
-        BlockState state = jukebox.getLocation().add(0.0, 1.0, 0.0).getBlock().getState();
-        if (state instanceof Chest chest) {
-            Inventory inventory = chest.getInventory();
+        Chest chest = getSingleChest();
+        if (chest == null) return null;
 
-            if (inventory.getSize() != 27) {
-                return null;
+        Inventory inventory = chest.getInventory();;
+        for (int i = skipOffset; i < inventory.getSize(); i++) {
+            ItemStack item = inventory.getItem(i);
+            if (item == null) {
+                continue;
             }
 
-            for (int i = skipOffset; i < inventory.getSize(); i++) {
-                ItemStack item = inventory.getItem(i);
-                if (item == null) {
-                    continue;
-                }
+            @Nullable String songId = SongItem.getSongId(item);
+            if (songId != null) {
+                playingSongItem = item.clone();
+                shiftInventory(inventory, -i);
+                return songId;
+            }
+        }
 
-                @Nullable String songId = SongItem.getSongId(item);
-                if (songId != null) {
-                    playingSongItem = item.clone();
-                    shiftInventory(inventory, -i);
-                    return songId;
-                }
+        return null;
+    }
+
+    private @Nullable String setPreviousSong(int prevOffset) {
+        Chest chest = getSingleChest();
+        if (chest == null) return null;
+
+        Inventory inventory = chest.getInventory();;
+        for (int i = inventory.getSize() - prevOffset; i >= 0; i--) {
+            ItemStack item = inventory.getItem(i);
+            if (item == null) {
+                continue;
+            }
+
+            @Nullable String songId = SongItem.getSongId(item);
+            if (songId != null) {
+                playingSongItem = item.clone();
+                shiftInventory(inventory, -i);
+                return songId;
             }
         }
 

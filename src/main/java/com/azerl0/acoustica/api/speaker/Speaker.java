@@ -23,7 +23,7 @@ public interface Speaker {
 
     void pause();
 
-    void setSong(@NotNull Song song);
+    void setSong(@Nullable Song song);
 
     int getTick();
 

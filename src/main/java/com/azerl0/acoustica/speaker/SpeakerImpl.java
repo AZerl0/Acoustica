@@ -83,9 +83,9 @@ public class SpeakerImpl implements Speaker {
     }
 
     @Override
-    public void setSong(@NotNull Song song) {
+    public void setSong(@Nullable Song song) {
         this.song = song;
-        currentSongVolume = song.getVolume();
+        if (song != null) currentSongVolume = song.getVolume();
         resetCurrentNotes();
         SpeakerSetSongEvent setSongEvent = new SpeakerSetSongEvent(this, song);
         Bukkit.getPluginManager().callEvent(setSongEvent);

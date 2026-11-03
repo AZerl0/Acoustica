@@ -30,6 +30,10 @@ public class PlayListGUI extends AbstractGUI {
 
         updatePlayingSongDisplay();
 
+        addButton(9, getAbstractSimpleButtonItem(Material.BLUE_EGG, Component.text("前の曲を再生")), event -> {
+            playList.previous();
+        });
+
         addButton(11, setAmount(getAbstractSimpleButtonItem(Material.ARROW, Component.text("60秒巻き戻す")), 60), event -> {
             playList.getSpeaker().setTick(Math.max(playList.getSpeaker().getTick() - 60 * 20, 0));
         });
@@ -39,6 +43,22 @@ public class PlayListGUI extends AbstractGUI {
         });
 
 
+        updatePauseButton();
+
+        addButton(14, setAmount(getAbstractSimpleButtonItem(Material.ARROW, Component.text("10秒進める")), 10), event -> {
+            playList.getSpeaker().setTick(playList.getSpeaker().getTick() + 10 * 20);
+        });
+
+        addButton(15, setAmount(getAbstractSimpleButtonItem(Material.ARROW, Component.text("60秒進める")), 60), event -> {
+            playList.getSpeaker().setTick(playList.getSpeaker().getTick() + 60 * 20);
+        });
+
+        addButton(17, getAbstractSimpleButtonItem(Material.BROWN_EGG, Component.text("次の曲を再生")), event -> {
+            playList.skip();
+        });
+    }
+
+    public void updatePauseButton() {
         addButton(13,
                 playList.getSpeaker().isPause() ?
                         getAbstractSimpleButtonItem(Material.LIME_CANDLE, Component.text("再生")) :
@@ -55,18 +75,6 @@ public class PlayListGUI extends AbstractGUI {
                     updateGUI();
                 }
         );
-
-        addButton(14, setAmount(getAbstractSimpleButtonItem(Material.ARROW, Component.text("10秒進める")), 10), event -> {
-            playList.getSpeaker().setTick(playList.getSpeaker().getTick() + 10 * 20);
-        });
-
-        addButton(15, setAmount(getAbstractSimpleButtonItem(Material.ARROW, Component.text("60秒進める")), 60), event -> {
-            playList.getSpeaker().setTick(playList.getSpeaker().getTick() + 60 * 20);
-        });
-
-        addButton(17, getAbstractSimpleButtonItem(Material.BROWN_EGG, Component.text("次の曲を再生")), event -> {
-            playList.skip();
-        });
     }
 
     public void updatePlayingSongDisplay() {
