@@ -5,11 +5,13 @@ import com.azerl0.acoustica.api.speaker.Speaker;
 import com.azerl0.acoustica.speaker.SpeakerImpl;
 import com.azerl0.acoustica.speaker.SpeakerManager;
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
+import static io.papermc.paper.command.brigadier.Commands.argument;
 import static io.papermc.paper.command.brigadier.Commands.literal;
 
 public class SpeakerCommand {
@@ -30,6 +32,9 @@ public class SpeakerCommand {
                                 .executes(SpeakerCommand::stop))
                         .then(literal("pause")
                                 .executes(SpeakerCommand::pause))
+                        .then(literal("disable_advancement")
+                                .then(argument("disable", BoolArgumentType.bool())
+                                        .executes(SpeakerCommand::disableAdvancement)))
                         .build(),
                 "Speaker command"
         );
@@ -89,6 +94,16 @@ public class SpeakerCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    private static int disableAdvancement(CommandContext<CommandSourceStack> context) {
+        boolean disable = context.getArgument("disable", boolean.class);
+        if (context.getSource().getSender() instanceof Player player) {
+            for (Speaker speaker : getSpeakerManager().getNearbySpeakers(player.getLocation(), 3)) {
+                speaker.setDisableAdvancement(disable);
+                player.sendMessage("Set disable advancement: " + disable);
+            }
+        }
+        return Command.SINGLE_SUCCESS;
+    }
 
 
     private static SpeakerManager getSpeakerManager() {

@@ -37,5 +37,9 @@ public interface Speaker {
 
     boolean songIsFinished();
 
+    boolean isDisableAdvancement();
+
+    void setDisableAdvancement(boolean disable);
+
     void remove();
 }
