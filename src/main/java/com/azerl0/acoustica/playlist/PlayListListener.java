@@ -1,6 +1,7 @@
 package com.azerl0.acoustica.playlist;
 
 import com.azerl0.acoustica.event.speaker.SpeakerSetSongEvent;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -16,9 +17,10 @@ public class PlayListListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() != null) {
+        if (event.getClickedBlock() != null && event.getAction().isRightClick()) {
             PlayList playList = playListManager.getPlayList(event.getClickedBlock().getLocation());
             if (playList != null) {
+                playList.getJukeboxBlock().getLocation().getWorld().playSound(playList.getSpeaker().getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 1.5f);
                 playList.getGui().open(event.getPlayer());
             }
         }
