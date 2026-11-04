@@ -2,6 +2,7 @@ package com.azerl0.acoustica.playlist;
 
 import com.azerl0.acoustica.event.speaker.SpeakerSetSongEvent;
 import org.bukkit.Sound;
+import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -40,5 +41,9 @@ public class PlayListListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         PlayList playList = playListManager.getPlayList(event.getBlock().getLocation());
         if (playList != null) playList.remove();
+        if (event.getBlock().getState() instanceof Chest) {
+            playList = playListManager.getPlayList(event.getBlock().getLocation().clone().add(0.0, -1.0, 0.0));
+            if (playList != null) playList.remove();
+        }
     }
 }
