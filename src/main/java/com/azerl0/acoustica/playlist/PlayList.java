@@ -32,6 +32,7 @@ public class PlayList {
         this.jukebox = jukebox;
         gui = new PlayListGUI(this);
         speaker = Acoustica.getInstance().getSpeakerManager().createSpeaker(jukebox.getLocation());
+        speaker.setParticleLocation(speaker.getParticleLocation().clone().add(0.0, 2.0, 0.0));
         task = Bukkit.getServer().getRegionScheduler().runAtFixedRate(Acoustica.getInstance(), jukebox.getLocation(), _ -> onTick(), 1L, 1L);
     }
 

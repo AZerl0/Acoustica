@@ -27,6 +27,7 @@ public class SpeakerImpl implements Speaker {
     private boolean pause;
     private final ScheduledTask task;
     private boolean disableAdvancement;
+    private Location particleLocation;
 
     public SpeakerImpl(UUID uuid, Location location, SpeakerManager manager) {
         this.uuid = uuid;
@@ -35,6 +36,7 @@ public class SpeakerImpl implements Speaker {
         pause = true;
         tick = 0;
         disableAdvancement = false;
+        particleLocation = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ()).add(0.5, 0.0, 0.5);
 
         resetCurrentNotes();
         task = Bukkit.getServer().getRegionScheduler().runAtFixedRate(Acoustica.getInstance(), location, _ -> onTick(), 1L, 1L);
@@ -56,8 +58,7 @@ public class SpeakerImpl implements Speaker {
 
         }
         if (!disableAdvancement && tick % 20 == 0 && !currentNotes.isEmpty()) {
-            Location particleLoc = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ()).add(0.5, 0.0, 0.5);
-            Particle.NOTE.builder().location(particleLoc).count(1).spawn();
+            Particle.NOTE.builder().location(particleLocation).count(1).spawn();
 
             if (song != null) {
                 for (Player player : location.getNearbyPlayers(5)) {
@@ -188,6 +189,16 @@ public class SpeakerImpl implements Speaker {
     @Override
     public void setDisableAdvancement(boolean disable) {
         disableAdvancement = disable;
+    }
+
+    @Override
+    public Location getParticleLocation() {
+        return particleLocation;
+    }
+
+    @Override
+    public void setParticleLocation(@NotNull Location location) {
+        particleLocation = location;
     }
 
     private void resetCurrentNotes() {

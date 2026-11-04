@@ -41,5 +41,9 @@ public interface Speaker {
 
     void setDisableAdvancement(boolean disable);
 
+    Location getParticleLocation();
+
+    void setParticleLocation(@NotNull Location location);
+
     void remove();
 }
