@@ -105,6 +105,9 @@ public class PlayList {
 
                 if (speaker.songIsFinished()) {
                     skip(1);
+                    if (speaker.getSong() == null) {
+                        skip(0);
+                    }
                 }
             }
         }
