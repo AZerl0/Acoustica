@@ -20,7 +20,7 @@ public class PlayListListener implements Listener {
         if (event.getClickedBlock() != null && event.getAction().isRightClick()) {
             PlayList playList = playListManager.getPlayList(event.getClickedBlock().getLocation());
             if (playList != null) {
-                playList.getJukeboxBlock().getLocation().getWorld().playSound(playList.getSpeaker().getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 1.5f);
+                playList.getJukeboxBlock().getLocation().getWorld().playSound(playList.getSpeaker().getLocation(), Sound.BLOCK_COPPER_CHEST_OPEN, 0.5f, 2.0f);
                 playList.getGui().open(event.getPlayer());
             }
         }
