@@ -22,6 +22,7 @@ public class PlayListListener implements Listener {
             if (playList != null) {
                 playList.getJukeboxBlock().getLocation().getWorld().playSound(playList.getSpeaker().getLocation(), Sound.BLOCK_COPPER_CHEST_OPEN, 0.5f, 2.0f);
                 playList.getGui().open(event.getPlayer());
+                event.setCancelled(true);
             }
         }
     }
