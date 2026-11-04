@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class PlayListListener implements Listener {
 
@@ -19,6 +20,10 @@ public class PlayListListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() != null && event.getAction().isRightClick()) {
+            if (event.getHand() == EquipmentSlot.OFF_HAND) {
+                event.setCancelled(true);
+                return;
+            }
             PlayList playList = playListManager.getPlayList(event.getClickedBlock().getLocation());
             if (playList != null) {
                 playList.getJukeboxBlock().getLocation().getWorld().playSound(playList.getSpeaker().getLocation(), Sound.BLOCK_COPPER_CHEST_OPEN, 0.5f, 2.0f);
