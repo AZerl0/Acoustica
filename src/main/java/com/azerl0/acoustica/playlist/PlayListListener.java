@@ -3,6 +3,7 @@ package com.azerl0.acoustica.playlist;
 import com.azerl0.acoustica.event.speaker.SpeakerSetSongEvent;
 import org.bukkit.Sound;
 import org.bukkit.block.Chest;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -19,6 +20,8 @@ public class PlayListListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        if (event.useInteractedBlock() == Event.Result.DENY) return;
+        if (event.useItemInHand() == Event.Result.DENY) return;
         if (event.getClickedBlock() != null && event.getAction().isRightClick()) {
             if (event.getHand() == EquipmentSlot.OFF_HAND) {
                 event.setCancelled(true);
