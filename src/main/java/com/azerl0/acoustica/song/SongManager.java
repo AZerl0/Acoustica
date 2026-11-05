@@ -1,5 +1,7 @@
 package com.azerl0.acoustica.song;
 
+import com.azerl0.acoustica.Acoustica;
+import com.azerl0.acoustica.config.ConfigManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,5 +34,11 @@ public class SongManager {
 
     public Map<String, Song> getSongs() {
         return new HashMap<>(songs);
+    }
+
+    public void updateSong(Song song) {
+        ConfigManager configManager = Acoustica.getInstance().getConfigManager();
+        configManager.saveSong(song);
+        songs.put(song.getId(), song);
     }
 }

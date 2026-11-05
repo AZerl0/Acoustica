@@ -89,6 +89,18 @@ public class ConfigManager {
         });
     }
 
+    public void saveSong(Song song) {
+        String path = "songs." + song.getId();
+        config.set(path, null);
+
+        config.set(path + ".name", LegacyComponentSerializer.legacyAmpersand().serialize(song.getSongName()));
+        config.set(path + ".fileName", song.getFileName());
+        config.set(path + ".volume", song.getVolume());
+        if (!song.getAdvancementKeys().isEmpty()) config.set(path + ".advancements", song.getAdvancementKeys());
+
+        acoustica.saveConfig();
+    }
+
     private Logger getLogger() {
         return acoustica.getLogger();
     }
