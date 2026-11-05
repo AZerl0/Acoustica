@@ -70,10 +70,14 @@ public class SongCommand {
 
     private static Component getSongInfoMessage(@NotNull Song song) {
         Component message = Component.text("Song info (id: " + song.getId() + ")").color(NamedTextColor.AQUA);
-        message = message.append(Component.text("\nSongName: ").append(song.getSongName())).color(NamedTextColor.WHITE);
-        message = message.append(Component.text("\nSongFileName: " + song.getFileName())).color(NamedTextColor.WHITE);
-        message = message.append(Component.text("\nSongVolume: " + song.getVolume())).color(NamedTextColor.WHITE);
-        message = message.append(Component.text("\nSongNotes: " + song.getNotes().size())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\n- name: ").append(song.getSongName())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\n- fileName: " + song.getFileName())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\n- volume: " + song.getVolume())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\n- notes: " + song.getNotes().size())).color(NamedTextColor.WHITE);
+        message = message.append(Component.text("\n- advancements: ")).color(NamedTextColor.WHITE);
+        for (String advancementKey : song.getAdvancementKeys()) {
+            message = message.append(Component.text("\n    - " + advancementKey)).color(NamedTextColor.WHITE);
+        }
         return message;
     }
 }
