@@ -57,10 +57,10 @@ public class SpeakerImpl implements Speaker {
             }
 
         }
-        if (!disableAdvancement && tick % 20 == 0 && !currentNotes.isEmpty()) {
+        if (tick % 20 == 0 && !songIsFinished()) {
             Particle.NOTE.builder().location(particleLocation).count(1).spawn();
 
-            if (song != null) {
+            if (song != null && !disableAdvancement) {
                 for (Player player : location.getNearbyPlayers(5)) {
                     AdvancementUtil.grantAdvancement(player, "acoustica:root");
                     for (String advPath : song.getAdvancementKeys()) {
