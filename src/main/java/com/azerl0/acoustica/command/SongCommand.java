@@ -44,7 +44,7 @@ public class SongCommand {
                                                 .executes(SongCommand::setVolume))))
                         .then(literal("setfilename")
                                 .then(argument("songId", StringArgumentType.word())
-                                        .then(argument("fineName", StringArgumentType.greedyString())
+                                        .then(argument("fileName", StringArgumentType.greedyString())
                                                 .executes(SongCommand::setFileName))))
                         .then(literal("advancement")
                                 .then(literal("reset")
