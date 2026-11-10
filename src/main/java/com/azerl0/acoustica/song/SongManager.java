@@ -24,11 +24,13 @@ public class SongManager {
         return songs.containsKey(songId);
     }
 
-    public void addSong(String songId, Song song) {
-        songs.put(songId, song);
+    public void addSong(Song song) {
+        updateSong(song);
     }
 
-    public void deleteSong(String songId) {
+    public void removeSong(String songId) {
+        ConfigManager configManager = Acoustica.getInstance().getConfigManager();
+        configManager.removeSong(songId);
         songs.remove(songId);
     }
 

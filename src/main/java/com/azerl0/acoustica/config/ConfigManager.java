@@ -82,7 +82,7 @@ public class ConfigManager {
                 if (legacy != null) name = LegacyComponentSerializer.legacyAmpersand().deserialize(legacy);
                 List<String> advancements = songSec.getStringList("advancements");
                 Song song = new Song(id, name,notes, volume, fileName, advancements);
-                songManager.addSong(id, song);
+                songManager.addSong(song);
             }
             getLogger().info("complete load songs");
 
@@ -97,6 +97,13 @@ public class ConfigManager {
         config.set(path + ".fileName", song.getFileName());
         config.set(path + ".volume", song.getVolume());
         if (!song.getAdvancementKeys().isEmpty()) config.set(path + ".advancements", song.getAdvancementKeys());
+
+        acoustica.saveConfig();
+    }
+
+    public void removeSong(String songId) {
+        String path = "songs." + songId;
+        config.set(path, null);
 
         acoustica.saveConfig();
     }

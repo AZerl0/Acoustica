@@ -32,6 +32,8 @@ public class SongCommand {
                                 .executes(SongCommand::info)))
                         .then(literal("create").then(argument("songId", StringArgumentType.word())
                                 .executes(SongCommand::create)))
+                        .then(literal("remove").then(argument("songId", StringArgumentType.word())
+                                .executes(SongCommand::remove)))
                         .then(literal("setvolume")
                                 .then(argument("songId", StringArgumentType.word())
                                         .then(argument("volume", FloatArgumentType.floatArg(0.0f))
@@ -97,6 +99,15 @@ public class SongCommand {
             SongManager songManager = getSongManager();
             songManager.updateSong(newSong);
         }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int remove(CommandContext<CommandSourceStack> context) {
+        getSong(context, song -> {
+            SongManager songManager = getSongManager();
+            songManager.removeSong(song.getId());
+        });
 
         return Command.SINGLE_SUCCESS;
     }
