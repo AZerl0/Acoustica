@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static io.papermc.paper.command.brigadier.Commands.argument;
 import static io.papermc.paper.command.brigadier.Commands.literal;
@@ -33,6 +34,10 @@ public class SongCommand {
                                 .then(argument("songId", StringArgumentType.word())
                                         .then(argument("volume", FloatArgumentType.floatArg(0.0f))
                                                 .executes(SongCommand::setVolume))))
+                        .then(literal("setfilename")
+                                .then(argument("songId", StringArgumentType.word())
+                                        .then(argument("fineName", StringArgumentType.greedyString())
+                                                .executes(SongCommand::setFileName))))
                         .then(literal("advancement")
                                 .then(literal("reset")
                                         .then(argument("songId", StringArgumentType.word())
@@ -80,52 +85,59 @@ public class SongCommand {
     }
 
     private static int setVolume(CommandContext<CommandSourceStack> context) {
-        CommandSender sender = context.getSource().getSender();
-        String id = context.getArgument("songId", String.class);
-        Song song = getSongManager().getSong(id);
-        if (song == null) {
-            sender.sendMessage(String.format("There is no song with the ID \"%s\".", id));
-        } else {
+        getSong(context, song -> {
             float volume = context.getArgument("volume", Float.class);
             Song newSong = new Song(song.getId(), song.getSongName(), song.getNotes(), volume, song.getFileName(), song.getAdvancementKeys());
             SongManager songManager = getSongManager();
             songManager.updateSong(newSong);
-        }
+        });
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int setFileName(CommandContext<CommandSourceStack> context) {
+        getSong(context, song -> {
+            String fileName = context.getArgument("fileName", String.class);
+            Song newSong = new Song(song.getId(), song.getSongName(), song.getNotes(), song.getVolume(), fileName, song.getAdvancementKeys());
+            SongManager songManager = getSongManager();
+            songManager.updateSong(newSong);
+        });
 
         return Command.SINGLE_SUCCESS;
     }
 
     private static int resetAdvancement(CommandContext<CommandSourceStack> context) {
-        CommandSender sender = context.getSource().getSender();
-        String id = context.getArgument("songId", String.class);
-        Song song = getSongManager().getSong(id);
-        if (song == null) {
-            sender.sendMessage(String.format("There is no song with the ID \"%s\".", id));
-        } else {
+        getSong(context, song -> {
             Song newSong = new Song(song.getId(), song.getSongName(), song.getNotes(), song.getVolume(), song.getFileName(), List.of());
             SongManager songManager = getSongManager();
             songManager.updateSong(newSong);
-        }
+        });
 
         return Command.SINGLE_SUCCESS;
     }
 
     private static int addAdvancement(CommandContext<CommandSourceStack> context) {
-        CommandSender sender = context.getSource().getSender();
-        String id = context.getArgument("songId", String.class);
-        Song song = getSongManager().getSong(id);
-        if (song == null) {
-            sender.sendMessage(String.format("There is no song with the ID \"%s\".", id));
-        } else {
+        getSong(context, song -> {
             String key = context.getArgument("key", String.class);
             List<String> keys = song.getAdvancementKeys();
             keys.add(key);
             Song newSong = new Song(song.getId(), song.getSongName(), song.getNotes(), song.getVolume(), song.getFileName(), keys);
             SongManager songManager = getSongManager();
             songManager.updateSong(newSong);
-        }
+        });
 
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static void getSong(CommandContext<CommandSourceStack> context, Consumer<Song> songConsumer) {
+        CommandSender sender = context.getSource().getSender();
+        String id = context.getArgument("songId", String.class);
+        Song song = getSongManager().getSong(id);
+        if (song == null) {
+            sender.sendMessage(String.format("There is no song with the ID \"%s\".", id));
+        } else {
+            songConsumer.accept(song);
+        }
     }
 
     private static SongManager getSongManager() {
