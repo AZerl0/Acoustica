@@ -11,6 +11,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +35,9 @@ public class SongCommand {
                                 .executes(SongCommand::create)))
                         .then(literal("remove").then(argument("songId", StringArgumentType.word())
                                 .executes(SongCommand::remove)))
+                        .then(literal("rename").then(argument("songId", StringArgumentType.word())
+                                .then(argument("name", StringArgumentType.greedyString())
+                                        .executes(SongCommand::rename))))
                         .then(literal("setvolume")
                                 .then(argument("songId", StringArgumentType.word())
                                         .then(argument("volume", FloatArgumentType.floatArg(0.0f))
@@ -107,6 +111,18 @@ public class SongCommand {
         getSong(context, song -> {
             SongManager songManager = getSongManager();
             songManager.removeSong(song.getId());
+        });
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int rename(CommandContext<CommandSourceStack> context) {
+        getSong(context, song -> {
+            String string = context.getArgument("name", String.class);
+            Component name = LegacyComponentSerializer.legacyAmpersand().deserialize(string);
+            Song newSong = new Song(song.getId(), name, song.getNotes(), song.getVolume(), song.getFileName(), song.getAdvancementKeys());
+            SongManager songManager = getSongManager();
+            songManager.updateSong(newSong);
         });
 
         return Command.SINGLE_SUCCESS;
