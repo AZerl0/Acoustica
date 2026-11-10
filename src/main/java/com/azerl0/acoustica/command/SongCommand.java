@@ -30,6 +30,8 @@ public class SongCommand {
                         .then(literal("reload").executes(SongCommand::reload))
                         .then(literal("info").then(argument("songId", StringArgumentType.word())
                                 .executes(SongCommand::info)))
+                        .then(literal("create").then(argument("songId", StringArgumentType.word())
+                                .executes(SongCommand::create)))
                         .then(literal("setvolume")
                                 .then(argument("songId", StringArgumentType.word())
                                         .then(argument("volume", FloatArgumentType.floatArg(0.0f))
@@ -79,6 +81,21 @@ public class SongCommand {
             sender.sendMessage(String.format("There is no song with the ID \"%s\".", id));
         } else {
             sender.sendMessage(getSongInfoMessage(song));
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int create(CommandContext<CommandSourceStack> context) {
+        CommandSender sender = context.getSource().getSender();
+        String id = context.getArgument("songId", String.class);
+        Song song = getSongManager().getSong(id);
+        if (song != null) {
+            sender.sendMessage(String.format("There is already song with the ID \"%s\".", id));
+        } else {
+            Song newSong = new Song(id, Component.text(id), List.of(), 1.0f, "null", List.of());
+            SongManager songManager = getSongManager();
+            songManager.updateSong(newSong);
         }
 
         return Command.SINGLE_SUCCESS;
