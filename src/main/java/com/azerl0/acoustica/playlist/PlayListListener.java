@@ -23,12 +23,12 @@ public class PlayListListener implements Listener {
         if (event.useInteractedBlock() == Event.Result.DENY) return;
         if (event.useItemInHand() == Event.Result.DENY) return;
         if (event.getClickedBlock() != null && event.getAction().isRightClick()) {
-            if (event.getHand() == EquipmentSlot.OFF_HAND) {
-                event.setCancelled(true);
-                return;
-            }
             PlayList playList = playListManager.getPlayList(event.getClickedBlock().getLocation());
             if (playList != null) {
+                if (event.getHand() == EquipmentSlot.OFF_HAND) {
+                    event.setCancelled(true);
+                    return;
+                }
                 playList.getJukeboxBlock().getLocation().getWorld().playSound(playList.getSpeaker().getLocation(), Sound.BLOCK_COPPER_CHEST_OPEN, 0.5f, 2.0f);
                 playList.getGui().open(event.getPlayer());
                 event.setCancelled(true);
