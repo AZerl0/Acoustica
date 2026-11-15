@@ -143,6 +143,7 @@ public class SongCommand {
         getSong(context, song -> {
             String fileName = context.getArgument("fileName", String.class);
             Song newSong = new Song(song.getId(), song.getSongName(), song.getNotes(), song.getVolume(), fileName, song.getAdvancementKeys());
+            newSong.updateNotes(Acoustica.getInstance());
             SongManager songManager = getSongManager();
             songManager.updateSong(newSong);
         });

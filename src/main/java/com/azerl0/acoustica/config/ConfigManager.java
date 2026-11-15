@@ -1,11 +1,8 @@
 package com.azerl0.acoustica.config;
 
 import com.azerl0.acoustica.Acoustica;
-import com.azerl0.acoustica.nbs.NbsReader;
-import com.azerl0.acoustica.nbs.NbsSong;
 import com.azerl0.acoustica.song.Song;
 import com.azerl0.acoustica.song.SongManager;
-import com.azerl0.acoustica.song.SongNote;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -13,8 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -67,21 +62,13 @@ public class ConfigManager {
                     continue;
                 }
 
-                Path path = acoustica.getDataPath().resolve("songs").resolve(fileName + ".nbs");
-                NbsSong nbsSong;
-                try {
-                    nbsSong = NbsReader.read(path);
-                } catch (IOException e) {
-                    getLogger().warning("failed load nbs file. id: " + id + ", message: " + e.getMessage());
-                    continue;
-                }
                 float volume = (float) songSec.getDouble("volume", 1.0);
-                List<SongNote> notes = SongNote.getNotesFromNbsSong(nbsSong);
                 Component name = Component.text(id);
                 String legacy = songSec.getString("name");
                 if (legacy != null) name = LegacyComponentSerializer.legacyAmpersand().deserialize(legacy);
                 List<String> advancements = songSec.getStringList("advancements");
-                Song song = new Song(id, name,notes, volume, fileName, advancements);
+                Song song = new Song(id, name,List.of(), volume, fileName, advancements);
+                song.updateNotes(acoustica);
                 songManager.addSong(song);
             }
             getLogger().info("complete load songs");

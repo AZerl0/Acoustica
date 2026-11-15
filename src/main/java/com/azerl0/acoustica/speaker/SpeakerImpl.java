@@ -178,6 +178,7 @@ public class SpeakerImpl implements Speaker {
     @Override
     public boolean songIsFinished() {
         if (song == null) return false;
+        if (song.getNotes().isEmpty()) return false;
         return tick > song.getNotes().getLast().getTick() + SONG_FINISH_OFFSET_TICK;
     }
 
