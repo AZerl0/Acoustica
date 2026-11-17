@@ -106,7 +106,7 @@ public class PlayListGUI extends AbstractGUI {
                     Component.text(
                             ComponentUtil.getTimeText(playList.getSpeaker().getTick()) +
                                     " / " +
-                                    ComponentUtil.getTimeText(playingSong.getNotes().getLast().getTick() + Speaker.SONG_FINISH_OFFSET_TICK)
+                                    ComponentUtil.getTimeText(playingSong.getLength() + Speaker.SONG_FINISH_OFFSET_TICK)
                     ).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false)
             ));
         }

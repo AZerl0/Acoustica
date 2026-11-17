@@ -60,6 +60,14 @@ public class Song {
         return advancementKeys;
     }
 
+    public int getLength() {
+        if (notes.isEmpty()) {
+            return 0;
+        } else {
+            return notes.getLast().getTick();
+        }
+    }
+
     public void updateNotes(Acoustica acoustica) {
         notes = List.of();
         Path path = acoustica.getDataPath().resolve("songs").resolve(fileName + ".nbs");
