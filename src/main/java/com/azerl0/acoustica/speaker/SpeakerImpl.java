@@ -57,7 +57,8 @@ public class SpeakerImpl implements Speaker {
             }
 
         }
-        if (tick % 20 == 0 && !songIsFinished()) {
+        final int SAFE_TIME = 2 * 20;
+        if (tick % 30 == 0 && tick > SAFE_TIME && !songIsFinished()) {
             Particle.NOTE.builder().location(particleLocation).count(1).spawn();
 
             if (song != null && !disableAdvancement) {
